@@ -148,6 +148,12 @@ if __name__ == "__main__":
             # print('fetch data cost {}'.format(time2-time1))
             volume_batch, label_batch = sampled_batch['image'], sampled_batch['label']
             volume_batch, label_batch = volume_batch.cuda(), label_batch.cuda()
+            
+            # image_name = sampled_batch['image_name']
+            # print('Labeled')
+            # print(image_name[:labeled_bs])
+            # print('Unlabeled')
+            # print(image_name[labeled_bs:])
 
             # Generate Discriminator target based on sampler
             Dtarget = torch.tensor([1, 1, 0, 0]).cuda()
@@ -215,7 +221,7 @@ if __name__ == "__main__":
             logging.info(
                 'iteration %d : loss : %f, loss_weight: %f, loss_haus: %f, loss_seg: %f, loss_dice: %f' %
                 (iter_num, loss.item(), consistency_weight, loss_sdf.item(),
-                 loss_seg.item(), loss_seg_dice.item()))
+                  loss_seg.item(), loss_seg_dice.item()))
 
             ## change lr
             if iter_num % 2500 == 0:
