@@ -20,6 +20,7 @@ from torch.utils.data import DataLoader
 from torchvision.utils import make_grid
 
 from networks.vnet_sdf import VNet
+from networks.unet_sdf import TinyUnet
 from networks.discriminator import FC3DDiscriminator
 
 from dataloaders import utils
@@ -91,7 +92,11 @@ if __name__ == "__main__":
 
     def create_model(ema=False):
         # Network definition
-        net = VNet(n_channels=1, n_classes=num_classes-1, normalization='batchnorm', has_dropout=True)
+        # net = VNet(n_channels=1, n_classes=num_classes-1, normalization='batchnorm', has_dropout=True)
+        features = (32, 64, 128, 256)
+        kernel_size = (3, 3, 3, 3)
+        strides = (1, 2, 2, 2)
+        net = TinyUnet(dim=3, in_channel=1, features=features, strides=strides, kernel_size=kernel_size, nclasses=num_classes-1)
         model = net.cuda()
         if ema:
             for param in model.parameters():
