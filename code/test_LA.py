@@ -2,6 +2,7 @@ import os
 import argparse
 import torch
 from networks.vnet_sdf import VNet
+from networks.unet_sdf import TinyUnet
 from test_util import test_all_case
 
 parser = argparse.ArgumentParser()
@@ -31,7 +32,10 @@ image_list = [FLAGS.root_path + "/2018LA_Seg_Training Set/" + item.replace('\n',
 
 
 def test_calculate_metric(epoch_num):
-    net = VNet(n_channels=1, n_classes=num_classes-1, normalization='batchnorm', has_dropout=False).cuda()
+    features = (32, 64, 128, 256)
+    kernel_size = (3, 3, 3, 3)
+    strides = (1, 2, 2, 2)
+    net = TinyUnet(dim=3, in_channel=1, features=features, strides=strides, kernel_size=kernel_size, nclasses=num_classes-1)
     save_mode_path = os.path.join(snapshot_path, 'iter_' + str(epoch_num) + '.pth')
     net.load_state_dict(torch.load(save_mode_path))
     print("init weight from {}".format(save_mode_path))
