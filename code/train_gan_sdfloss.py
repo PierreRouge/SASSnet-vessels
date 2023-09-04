@@ -203,7 +203,7 @@ if __name__ == "__main__":
             loss_seg = ce_loss(outputs[:labeled_bs, 0, ...], label_batch[:labeled_bs].float())
             loss_seg_dice = losses.dice_loss(outputs_soft[:labeled_bs, 0, :, :, :], label_batch[:labeled_bs] == 1)
 
-            consistency_weight = get_current_consistency_weight(iter_num//150)
+            consistency_weight = get_current_consistency_weight(iter_num//21) #21 because there are 21 iterations per epoch
 
             supervised_loss = loss_seg_dice + args.beta * loss_sdf
 
