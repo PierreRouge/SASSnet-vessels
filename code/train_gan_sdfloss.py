@@ -175,29 +175,29 @@ if __name__ == "__main__":
             with torch.no_grad():
                 gt_dis = compute_sdf(label_batch[:].cpu().numpy(), outputs[:labeled_bs, 0, ...].shape)
                 
-                for i in range(len(gt_dis)):
-                    path = '../sdf/' + image_name[i] + '.nii.gz'
-                    img = nib.Nifti1Image(gt_dis[i], affine=np.eye(4))
-                    nib.save(img, path)
+                # for i in range(len(gt_dis)):
+                #     path = '../sdf/' + image_name[i] + '.nii.gz'
+                #     img = nib.Nifti1Image(gt_dis[i], affine=np.eye(4))
+                #     nib.save(img, path)
                     
                 gt_dis = torch.from_numpy(gt_dis).float().cuda()
                 
                 
                     
-            for i in range(len(outputs_tanh)):
-                path = '../pred_sdf/' + image_name[i] + '.nii.gz'
-                img = nib.Nifti1Image(outputs_tanh[i][0].detach().cpu().numpy(), affine=np.eye(4))
-                nib.save(img, path)
+            # for i in range(len(outputs_tanh)):
+            #     path = '../pred_sdf/' + image_name[i] + '.nii.gz'
+            #     img = nib.Nifti1Image(outputs_tanh[i][0].detach().cpu().numpy(), affine=np.eye(4))
+            #     nib.save(img, path)
                 
-            for i in range(len(label_batch)):
-                path = '../gt/' + image_name[i] + '.nii.gz'
-                img = nib.Nifti1Image(label_batch[i].cpu().numpy().astype(float), affine=np.eye(4))
-                nib.save(img, path)
+            # for i in range(len(label_batch)):
+            #     path = '../gt/' + image_name[i] + '.nii.gz'
+            #     img = nib.Nifti1Image(label_batch[i].cpu().numpy().astype(float), affine=np.eye(4))
+            #     nib.save(img, path)
                 
-            for i in range(len(outputs_soft)):
-                path = '../seg/' + image_name[i] + '.nii.gz'
-                img = nib.Nifti1Image(outputs_soft[i][0].detach().cpu().numpy(), affine=np.eye(4))
-                nib.save(img, path)
+            # for i in range(len(outputs_soft)):
+            #     path = '../seg/' + image_name[i] + '.nii.gz'
+            #     img = nib.Nifti1Image(outputs_soft[i][0].detach().cpu().numpy(), affine=np.eye(4))
+            #     nib.save(img, path)
                     
             loss_sdf = mse_loss(outputs_tanh[:labeled_bs, 0, ...], gt_dis)
             loss_seg = ce_loss(outputs[:labeled_bs, 0, ...], label_batch[:labeled_bs].float())
