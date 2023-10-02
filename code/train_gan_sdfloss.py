@@ -38,7 +38,7 @@ parser.add_argument('--labeled_bs', type=int, default=2, help='labeled_batch_siz
 parser.add_argument('--base_lr', type=float,  default=0.01, help='maximum epoch number to train')
 parser.add_argument('--D_lr', type=float,  default=1e-4, help='maximum discriminator learning rate to train')
 parser.add_argument('--deterministic', type=int,  default=1, help='whether use deterministic training')
-parser.add_argument('--labelnum', type=int,  default=42, help='random seed')
+parser.add_argument('--labelnum', type=int,  default=34, help='random seed')
 parser.add_argument('--seed', type=int,  default=1337, help='random seed')
 parser.add_argument('--gpu', type=str,  default='0', help='GPU to use')
 parser.add_argument('--beta', type=float,  default=0.3, help='balance factor to control regional and sdm loss')
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     labelnum = args.labelnum    # default 42
     labeled_idxs = list(range(labelnum))
-    unlabeled_idxs = list(range(labelnum, 76))
+    unlabeled_idxs = list(range(labelnum, 350))
     batch_sampler = TwoStreamBatchSampler(labeled_idxs, unlabeled_idxs, batch_size, batch_size-labeled_bs)
     def worker_init_fn(worker_id):
         random.seed(args.seed+worker_id)

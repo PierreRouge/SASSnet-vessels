@@ -74,13 +74,13 @@ def sensitivity_specificity_precision(y_true, y_pred):
     tn = np.sum(np.logical_and(y_pred == 0, y_true == 0))
     fp = np.sum(np.logical_and(y_pred == 1, y_true == 0))
     sens = tp / np.sum(y_true)
-    spec = tn / (tn + fp)
+    spec = tn / (tn + fp)   
     prec = tp / (tp + fp)
     
     return sens, spec, prec
 
 
-dir_inputs = '../model/SASSnet_009/test/*_pred.nii.gz'
+dir_inputs = '../model/SASSnet_unet_003/test/*_pred.nii.gz'
 
 listt = glob(dir_inputs)
 
