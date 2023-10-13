@@ -7,6 +7,7 @@ Created on Tue Aug 22 13:30:12 2023
 """
 
 import csv
+import argparse
 from glob import glob
 from tqdm import tqdm
 
@@ -14,7 +15,17 @@ import numpy as np
 import nibabel as nib
 
 from skimage.morphology import skeletonize
+from skimage.morphology import remove_small_objects
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dir_inputs', type=str, default='../model/prediction/UA-MT_lr=0.001_cons=0.001_post/*_pred.nii.gz', help='Path')
+parser.add_argument('--postprocessing', type=bool,  default=True, help='prostprocessing or not')
+
+args = parser.parse_args()
+
+dir_inputs = args.dir_inputs +'/*_pred.nii.gz'
+postprocessing = args.postprocessing
 
 # Metrics
 
@@ -80,8 +91,6 @@ def sensitivity_specificity_precision(y_true, y_pred):
     return sens, spec, prec
 
 
-dir_inputs = '../model/SASSnet_unet_003/test/*_pred.nii.gz'
-
 listt = glob(dir_inputs)
 
 res = open(dir_inputs.replace('/*_pred.nii.gz', '') + '/../res.csv', 'w')
@@ -101,6 +110,11 @@ for item in tqdm(listt):
     
     pred = pred.get_fdata()
     gt = gt.get_fdata()
+    
+    if postprocessing:
+        pred = remove_small_objects(np.array(pred, dtype=bool), min_size=100)
+        gt = remove_small_objects(np.array(gt, dtype=bool), min_size=100)
+    
     
     dice = dice_numpy(gt, pred)
     cldice = cldice_numpy(gt, pred)
