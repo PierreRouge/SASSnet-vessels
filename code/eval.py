@@ -93,7 +93,9 @@ def sensitivity_specificity_precision(y_true, y_pred):
 
 listt = glob(dir_inputs)
 
-res = open(dir_inputs.replace('/*_pred.nii.gz', '') + '/../res.csv', 'w')
+
+exp = dir_inputs.split('/')[-3]
+res = open(dir_inputs.replace('/*_pred.nii.gz', '') + '/../res_' + exp + '.csv', 'w')
 fieldnames = ['Patient', 'Dice', 'clDice', 'Precision', 'Sensitivity']
 writer = csv.DictWriter(res, fieldnames=fieldnames)
 writer.writeheader()
