@@ -40,6 +40,8 @@ parser.add_argument('--D_lr', type=float,  default=1e-4, help='maximum discrimin
 parser.add_argument('--deterministic', type=int,  default=1, help='whether use deterministic training')
 parser.add_argument('--labelnum', type=int,  default=34, help='random seed')
 parser.add_argument('--maxsamples', type=int,  default=350, help='Number of total samples')
+parser.add_argument('--patch_size', nargs='+', type=int, default=[128, 128, 128], help='Patch _size')
+
 parser.add_argument('--seed', type=int,  default=1337, help='random seed')
 parser.add_argument('--gpu', type=str,  default='0', help='GPU to use')
 parser.add_argument('--beta', type=float,  default=0.3, help='balance factor to control regional and sdm loss')
@@ -73,7 +75,7 @@ torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
 
 num_classes = 2
-patch_size = (128, 128, 96)
+patch_size = tuple(args.patch_size)
 
 def get_current_consistency_weight(epoch):
     # Consistency ramp-up from https://arxiv.org/abs/1610.02242
