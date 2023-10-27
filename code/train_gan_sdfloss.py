@@ -165,7 +165,10 @@ if __name__ == "__main__":
             # print(image_name[labeled_bs:])
 
             # Generate Discriminator target based on sampler
-            Dtarget = torch.tensor([1, 1, 0, 0]).cuda()
+            if args.labeled_bs == 2 :
+                Dtarget = torch.tensor([1, 1, 0, 0]).cuda()
+            elif args.labeled_bs == 1 :
+                Dtarget = torch.tensor([1, 0]).cuda()
             model.train()
             D.eval()
 
