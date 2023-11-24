@@ -53,7 +53,7 @@ class FCDiscriminator(nn.Module):
 
 class FC3DDiscriminator(nn.Module):
 
-    def __init__(self, num_classes, ndf=64, n_channel=1):
+    def __init__(self, num_classes, ndf=64, n_channel=1, dataset=''):
         super(FC3DDiscriminator, self).__init__()
         # downsample 16
         self.conv0 = nn.Conv3d(num_classes, ndf, kernel_size=4, stride=2, padding=1)
@@ -63,11 +63,17 @@ class FC3DDiscriminator(nn.Module):
         self.conv3 = nn.Conv3d(ndf*2, ndf*4, kernel_size=4, stride=2, padding=1)
         self.conv4 = nn.Conv3d(ndf*4, ndf*8, kernel_size=4, stride=2, padding=1)
         self.avgpool = nn.AvgPool3d((7, 7, 5))
-        self.classifier = nn.Linear(ndf*8, 2)
+        
+        if dataset == 'Liver':
+            self.classifier = nn.Linear(ndf * 4, 2)
+        else:
+            self.classifier = nn.Linear(ndf * 8, 2)
 
         self.leaky_relu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
         self.dropout = nn.Dropout3d(0.5)
         self.Softmax = nn.Softmax()
+        
+        self.dataset = dataset
 
     def forward(self, map, image):
         batch_size = map.shape[0]
@@ -85,8 +91,9 @@ class FC3DDiscriminator(nn.Module):
         x = self.leaky_relu(x)
         x = self.dropout(x)
 
-        x = self.conv4(x)
-        x = self.leaky_relu(x)
+        if self.dataset != 'Liver':
+            x = self.conv4(x)
+            x = self.leaky_relu(x)
 
         x = self.avgpool(x)
 

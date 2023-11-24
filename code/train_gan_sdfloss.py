@@ -32,6 +32,7 @@ from utils.util import compute_sdf
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str, default='../../data', help='Name of Experiment')
 parser.add_argument('--exp', type=str,  default='UAMT_001', help='model_name')
+parser.add_argument('--dataset', type=str,  default='', help='Data set')
 parser.add_argument('--max_iterations', type=int,  default=6000, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int, default=4, help='batch_size per gpu')
 parser.add_argument('--labeled_bs', type=int, default=2, help='labeled_batch_size per gpu')
@@ -109,7 +110,7 @@ if __name__ == "__main__":
 
     model = create_model()
 
-    D = FC3DDiscriminator(num_classes=num_classes - 1)
+    D = FC3DDiscriminator(num_classes=num_classes - 1, dataset=args.dataset)
     D = D.cuda()
 
     db_train = LAHeart(base_dir=train_data_path,
