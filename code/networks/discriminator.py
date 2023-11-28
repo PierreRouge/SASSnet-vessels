@@ -62,7 +62,7 @@ class FC3DDiscriminator(nn.Module):
         self.conv2 = nn.Conv3d(ndf, ndf*2, kernel_size=4, stride=2, padding=1)
         self.conv3 = nn.Conv3d(ndf*2, ndf*4, kernel_size=4, stride=2, padding=1)
         self.conv4 = nn.Conv3d(ndf*4, ndf*8, kernel_size=4, stride=2, padding=1)
-        self.avgpool = nn.AvgPool3d((7, 7, 5))
+        self.avgpool = nn.AdaptiveAvgPool3d((1,1,1))
         
         if dataset == 'Liver':
             self.classifier = nn.Linear(ndf * 4, 2)
