@@ -10,6 +10,8 @@ import random
 import numpy as np
 import nibabel as nib
 
+from sklearn.model_selection import train_test_split
+
 import torch
 import torch.optim as optim
 from torchvision import transforms
@@ -41,6 +43,8 @@ parser.add_argument('--D_lr', type=float,  default=1e-4, help='maximum discrimin
 parser.add_argument('--deterministic', type=int,  default=1, help='whether use deterministic training')
 parser.add_argument('--labelnum', type=int,  default=5, help='random seed')
 parser.add_argument('--maxsamples', type=int,  default=9, help='Number of total samples')
+parser.add_argument('--random_state', type=int,  default=1, help='Random state for data splitting')
+parser.add_argument('--niter_epoch', type=int,  default=150, help='Number of iterations defining an epoch (for sigmoid rampup)')
 parser.add_argument('--patch_size', nargs='+', type=int, default=[64, 64, 64], help='Patch _size')
 
 parser.add_argument('--seed', type=int,  default=1337, help='random seed')
@@ -121,9 +125,10 @@ if __name__ == "__main__":
                           ToTensor(),
                           ]))
 
-    labelnum = args.labelnum    # default 42
-    labeled_idxs = list(range(labelnum))
-    unlabeled_idxs = list(range(labelnum, args.maxsamples))
+    labelnum = args.labelnum 
+    idxs = np.arange(0, args.maxsamples)
+    labeled_idxs, unlabeled_idxs = train_test_split(idxs, train_size=args.labelnum, random_state=args.random_state)
+   
     batch_sampler = TwoStreamBatchSampler(labeled_idxs, unlabeled_idxs, batch_size, batch_size-labeled_bs)
     def worker_init_fn(worker_id):
         random.seed(args.seed+worker_id)
